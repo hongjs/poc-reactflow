@@ -8,6 +8,7 @@ import ReactFlow, {
   Controls,
   MarkerType,
   MiniMap,
+  PanOnScrollMode,
   addEdge,
   useEdgesState,
   useNodesState,
@@ -16,6 +17,14 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 
 const elk = new ELK();
+
+export interface NodeData {
+  name: string;
+  title: string;
+  photo: string;
+  expanded?: boolean
+  onDataChanged: (id: string, data: NodeData) => void,
+}
 
 const DnDFlow = () => {
   const { fitView } = useReactFlow();
@@ -103,6 +112,12 @@ const DnDFlow = () => {
     event.dataTransfer.dropEffect = 'move';
   }, []);
 
+  const handleDataChanged = useCallback((id: string, data: NodeData) => {
+
+    setNodes((nds) => nds.map((nd) => nd.id === id ? { ...nd, data } : nd));
+  }, []);
+
+
   const onDrop = useCallback(
     (event: any) => {
       event.preventDefault();
@@ -125,7 +140,12 @@ const DnDFlow = () => {
         id: faker.string.uuid(),
         type,
         position,
-        data: { name: faker.person.fullName(), title: faker.person.jobArea(), photo: faker.image.urlLoremFlickr() },
+        data: {
+          name: faker.person.fullName(),
+          title: faker.person.jobArea(),
+          photo: faker.image.urlLoremFlickr(),
+          onDataChanged: handleDataChanged,
+        } as NodeData,
         style: { border: '1px solid #777', padding: 10, width: '200px' }
       };
 
@@ -158,6 +178,8 @@ const DnDFlow = () => {
           onInit={setReactFlowInstance}
           onDrop={onDrop}
           onDragOver={onDragOver}
+          panOnScroll={true}
+          panOnScrollMode={PanOnScrollMode.Free}
           fitView
         >
           <Controls />

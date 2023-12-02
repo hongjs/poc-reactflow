@@ -31,7 +31,7 @@ const NodeHandler = ({ type, position, maxConnection }: NodeHandlerProps) => {
         <Handle
             type={type}
             position={position}
-            style={{ [position.toString()]: '-16px', background: '#21CE99', width: '10px', height: '10px' }}
+            style={{ [position.toString()]: '-6px', background: '#21CE99', width: '10px', height: '10px' }}
             onConnect={(params) => console.log('handle onConnect', params)}
             isConnectable={isConnectable}
         />

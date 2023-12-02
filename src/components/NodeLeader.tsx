@@ -1,21 +1,13 @@
-import { faker } from '@faker-js/faker';
-import React, { ComponentType } from 'react';
+import { ComponentType } from 'react';
 import { NodeProps, Position } from 'reactflow';
 import NodeHandler from './NodeHandler';
 import NodeItem from './NodeItem';
 
-const CustomNode: ComponentType<NodeProps> = ({ data }) => {
-  const [name, setName] = React.useState<string | undefined>(undefined);
-  const [title, setTitle] = React.useState<string | undefined>(undefined);
-  const handleEditClick = () => {
-    setName(faker.person.fullName());
-    setTitle(faker.person.jobArea());
-  };
-
+const CustomNode: ComponentType<NodeProps> = ({ id, data }) => {
   return (
     <>
       <NodeHandler type="target" position={Position.Top} maxConnection={1} />
-      <NodeItem name={name} title={title} data={data} borderColor='#0783a9' handleEditClick={handleEditClick} />
+      <NodeItem id={id} data={data} borderColor='#0783a9' />
       <NodeHandler type="source" position={Position.Bottom} />
     </>
   );
