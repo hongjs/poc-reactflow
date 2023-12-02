@@ -1,16 +1,13 @@
 'use client';
-import { CustomNode, NodeIC, RootNode, Sidebar } from '@/components';
+import { Panel, Sidebar } from '@/components';
+import { elkOptions, initialEdges, initialNodes, nodeTypes } from '@/configs/constants';
 import { faker } from '@faker-js/faker';
 import ELK, { ElkNode, LayoutOptions } from 'elkjs/lib/elk.bundled.js';
 import { useCallback, useRef, useState } from 'react';
 import ReactFlow, {
   Controls,
-  Edge,
   MarkerType,
   MiniMap,
-  Node,
-  NodeTypes,
-  Panel,
   addEdge,
   useEdgesState,
   useNodesState,
@@ -19,24 +16,11 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 
 const elk = new ELK();
-const elkOptions = {
-  'elk.algorithm': 'mrtree',
-  'elk.layered.spacing.nodeNodeBetweenLayers': '100',
-  'elk.spacing.nodeNode': '80'
-};
-
-const initialEdges: Edge[] = [];
-const initialNodes: Node[] = [];
-const nodeTypes: NodeTypes = {
-  input: RootNode,
-  default: CustomNode,
-  output: NodeIC
-};
 
 const DnDFlow = () => {
   const { fitView } = useReactFlow();
   const reactFlowWrapper = useRef(null);
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
 
@@ -74,7 +58,7 @@ const DnDFlow = () => {
   };
 
   const onLayout = useCallback(
-    ({ direction, useInitialNodes = false }: any) => {
+    (direction: string, useInitialNodes: boolean) => {
       const opts: LayoutOptions = { 'elk.direction': direction, ...elkOptions };
 
       const ns = useInitialNodes ? initialNodes : nodes;
@@ -181,10 +165,7 @@ const DnDFlow = () => {
       </div>
       <MiniMap />
       <Sidebar />
-      <Panel position="top-right">
-        <button onClick={onSave}>save</button>
-        <button onClick={() => onLayout({ direction: 'DOWN', useInitialNodes: false })}>auto layout</button>
-      </Panel>
+      <Panel onSave={onSave} onLayout={onLayout} />
     </div>
   );
 };

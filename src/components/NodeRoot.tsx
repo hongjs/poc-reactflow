@@ -4,7 +4,7 @@ import { NodeProps, Position } from 'reactflow';
 import NodeHandler from './NodeHandler';
 import NodeItem from './NodeItem';
 
-const NodeIC: ComponentType<NodeProps> = ({ data }) => {
+const RootNode: ComponentType<NodeProps> = ({ data }) => {
   const [name, setName] = React.useState<string | undefined>(undefined);
   const [title, setTitle] = React.useState<string | undefined>(undefined);
 
@@ -15,10 +15,10 @@ const NodeIC: ComponentType<NodeProps> = ({ data }) => {
 
   return (
     <>
-      <NodeHandler type="target" position={Position.Top} maxConnection={1} />
-      <NodeItem name={name} title={title} data={data} borderColor='#FF8767' handleEditClick={handleEditClick} />
+      <NodeItem name={name} title={title} data={data} borderColor='#6f9940' handleEditClick={handleEditClick} />
+      <NodeHandler type="source" position={Position.Bottom} />
     </>
   );
 };
 
-export default NodeIC;
+export default RootNode;
