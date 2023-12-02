@@ -1,0 +1,33 @@
+{
+  "name": "poc-reactflow",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prettier": "prettier --write --ignore-path .gitignore ."
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.19",
+    "@mui/material": "^5.14.19",
+    "elkjs": "^0.8.2",
+    "next": "13.5.6",
+    "react": "^18",
+    "react-dom": "^18",
+    "reactflow": "^11.10.1"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.3.1",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8.54.0",
+    "eslint-config-next": "13.5.6",
+    "prettier": "^3.1.0",
+    "typescript": "^5"
+  }
+}
