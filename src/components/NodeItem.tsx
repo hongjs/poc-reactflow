@@ -15,7 +15,7 @@ const NodeItem = ({ name, title, data, borderColor, handleEditClick }: NodeItemP
     return (
         <Grid container justifyContent="center" alignItems="center" sx={{ position: 'relative' }}>
             <Grid item xs={4}>
-                <Avatar src={data?.photo} sx={{ width: 48, height: 48, borderColor: borderColor, borderWidth: borderColor ? '0.15rem' : undefined, borderStyle: borderColor ? 'solid' : undefined }} />
+                <Avatar src={data?.photo} sx={{ width: 48, height: 48, borderColor, borderWidth: borderColor ? '0.2rem' : undefined, borderStyle: borderColor ? 'solid' : undefined }} />
             </Grid>
             <Grid item xs={8}>
                 <Typography variant="body1">{name ?? data?.name}</Typography>

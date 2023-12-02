@@ -68,5 +68,12 @@
 .react-flow__node.selected.selectable {
   border: 1px solid #21CE99 !important;
   box-shadow: 0 0 0 1px #75E8CA !important;
-  transition: border 0.3s ease-in-out !important;
+  transition: border 0.3s !important;
 }
+
+.react-flow__edge.selected > .react-flow__edge-path {
+  stroke: #F58F29 !important;
+  transition: stroke 0.3s !important;
+}
+
+ 

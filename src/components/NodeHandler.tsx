@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Handle, Position, getConnectedEdges, useNodeId, useStore } from 'reactflow'
+import { Handle, Position, getConnectedEdges, useNodeId, useStore, } from 'reactflow'
 
 type NodeHandlerProps = {
     type: 'target' | 'source'
@@ -23,9 +23,9 @@ const NodeHandler = ({ type, position, maxConnection }: NodeHandlerProps) => {
 
         const node = nodeInternals.get(nodeId);
         const connectedEdges = getConnectedEdges([node], edges);
-        console.log(connectedEdges.length < maxConnection, connectedEdges.length, maxConnection)
-        return connectedEdges.length < maxConnection;
-    }, [nodeInternals, edges, nodeId, maxConnection]);
+        const targetCount = connectedEdges.filter(i => i.target === nodeId).length
+        return targetCount < maxConnection;
+    }, [maxConnection, nodeInternals, nodeId, edges]);
 
     return (
         <Handle
