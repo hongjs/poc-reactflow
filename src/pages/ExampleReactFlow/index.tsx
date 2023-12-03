@@ -156,7 +156,7 @@ const DnDFlow = () => {
           title: faker.person.jobArea(),
           photo: faker.image.urlLoremFlickr(),
           onDataChanged: handleDataChanged,
-          percentage: faker.number.int({ min: 0, max: 100 })
+          percentage: faker.number.int({ min: 0, max: 100 }),
         } as NodeData,
         style: { border: '1px solid #777', padding: 10, width: '200px' }
       };
@@ -202,7 +202,7 @@ const DnDFlow = () => {
       <div
         className="reactflow-wrapper"
         ref={reactFlowWrapper}
-        style={{ backgroundColor: '#efefef', width: '100%', height: '950px' }}
+        style={{ backgroundColor: '#efefef', width: '100%', height: '100vh' }}
       >
         <ReactFlow
           nodes={nodes}

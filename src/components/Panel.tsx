@@ -1,5 +1,6 @@
 
 import { Button, Stack } from '@mui/material';
+import { memo, useCallback } from 'react';
 import { Panel } from 'reactflow';
 type ToolbarPanelProps = {
     onSave: () => void
@@ -8,11 +9,11 @@ type ToolbarPanelProps = {
 
 const ToolbarPanel = ({ onSave, onLayout }: ToolbarPanelProps) => {
 
-    const handleLayoutClick = () => {
+    const handleLayoutClick = useCallback(() => {
         if (onLayout) {
             onLayout('DOWN', false)
         }
-    }
+    }, [onLayout]);
 
     return (
         <Panel position="top-left">
@@ -24,4 +25,4 @@ const ToolbarPanel = ({ onSave, onLayout }: ToolbarPanelProps) => {
     )
 }
 
-export default ToolbarPanel
+export default memo(ToolbarPanel)

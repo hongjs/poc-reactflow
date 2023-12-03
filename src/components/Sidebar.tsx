@@ -1,28 +1,34 @@
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
+import { memo, useCallback } from 'react';
 
 type NodeType = 'input' | 'default' | 'output';
+
 const SideBar = () => {
-  const onDragStart = (event: React.DragEvent<HTMLDivElement>, nodeType: NodeType) => {
-    if (event) {
-      event.dataTransfer?.setData('application/reactflow', nodeType);
+
+  const onDragStart = useCallback((event: React.DragEvent<HTMLButtonElement>, nodeType: NodeType) => {
+    if (event.dataTransfer) {
+      const img = document?.createElement("img");
+      img.src = "/images/cardLoading.svg";
+      event.dataTransfer.setDragImage(img, -200, -200);
+      event.dataTransfer.setData('application/reactflow', nodeType);
       // event.dataTransfer?.effectAllowed = 'move';
     }
-  };
+  }, []);
 
   return (
     <aside>
-      <Box className="description">You can drag these nodes to the pane on the right.</Box>
-      <Box className="dndnode input" onDragStart={(event) => onDragStart(event, 'input')} draggable>
+      <Box className="description">Drag these nodes to the pane on the left.</Box>
+      <Button className="dndnode input" variant='contained' color="secondary" fullWidth draggable onDragStart={(event) => onDragStart(event, 'input')} sx={{ padding: '16px !important', borderRadius: '15px !important' }}>
         Root Node
-      </Box>
-      <div className="dndnode" onDragStart={(event) => onDragStart(event, 'default')} draggable>
+      </Button>
+      <Button className="dndnode" variant='contained' color="secondary" fullWidth draggable onDragStart={(event) => onDragStart(event, 'default')} sx={{ padding: '16px !important', borderRadius: '15px !important' }}>
         Middle Node
-      </div>
-      <div className="dndnode output" onDragStart={(event) => onDragStart(event, 'output')} draggable>
+      </Button>
+      <Button className="dndnode output" variant='contained' color="secondary" fullWidth draggable onDragStart={(event) => onDragStart(event, 'output')} sx={{ padding: '16px !important', borderRadius: '15px !important' }}>
         End Node
-      </div>
-    </aside>
+      </Button>
+    </aside >
   );
 };
 
-export default SideBar;
+export default memo(SideBar);
