@@ -13,13 +13,13 @@ const SideBar = () => {
     <aside>
       <Box className="description">You can drag these nodes to the pane on the right.</Box>
       <Box className="dndnode input" onDragStart={(event) => onDragStart(event, 'input')} draggable>
-        Root
+        Root Node
       </Box>
       <div className="dndnode" onDragStart={(event) => onDragStart(event, 'default')} draggable>
-        Leader
+        Middle Node
       </div>
       <div className="dndnode output" onDragStart={(event) => onDragStart(event, 'output')} draggable>
-        IC
+        End Node
       </div>
     </aside>
   );

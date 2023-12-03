@@ -3,14 +3,13 @@ import { NodeProps, Position } from 'reactflow';
 import NodeHandler from './NodeHandler';
 import NodeItem from './NodeItem';
 
-const CustomNode: ComponentType<NodeProps> = ({ id, data }) => {
+const EndNode: ComponentType<NodeProps> = ({ id, data }) => {
   return (
     <>
       <NodeHandler type="target" position={Position.Top} maxConnection={1} />
-      <NodeItem id={id} data={data} borderColor='#0783a9' />
-      <NodeHandler type="source" position={Position.Bottom} />
+      <NodeItem id={id} data={data} borderColor='#FF8767' disabledExpand />
     </>
   );
 };
 
-export default CustomNode;
+export default EndNode;

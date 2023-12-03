@@ -1,5 +1,7 @@
-import { NodeIC, NodeLeader, NodeRoot } from "@/components";
-import { Edge, NodeTypes } from "reactflow";
+import { EndNode, MiddleNode, RootNode } from "@/components";
+import DefaultEdge from "@/components/edge/DefaultEdge";
+import NumberEdge from "@/components/edge/NumberEdge";
+import { Edge, EdgeTypes, NodeTypes } from "reactflow";
 
 export const elkOptions = {
     'elk.algorithm': 'mrtree',
@@ -10,10 +12,18 @@ export const elkOptions = {
 export const initialEdges: Edge[] = [];
 export const initialNodes: Node[] = [];
 export const nodeTypes: NodeTypes = {
-    input: NodeRoot,
-    default: NodeLeader,
-    output: NodeIC
+    input: RootNode,
+    default: MiddleNode,
+    output: EndNode
 };
 
 
+export const edgeTypes: EdgeTypes = {
+    default: DefaultEdge,
+    number: NumberEdge
+};
 
+
+export const colors = {
+    mint: '#0783a9'
+}

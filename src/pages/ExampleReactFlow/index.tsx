@@ -1,6 +1,6 @@
 'use client';
 import { ConnectionLine, Panel, Sidebar } from '@/components';
-import { elkOptions, initialEdges, initialNodes, nodeTypes, } from '@/configs/constants';
+import { edgeTypes, elkOptions, initialEdges, initialNodes, nodeTypes, } from '@/configs/constants';
 import { faker } from '@faker-js/faker';
 import ELK, { ElkExtendedEdge, ElkNode, LayoutOptions } from 'elkjs/lib/elk.bundled.js';
 import { DragEventHandler, useCallback, useRef, useState } from 'react';
@@ -29,6 +29,7 @@ export interface NodeData {
   title: string;
   photo: string;
   expanded?: boolean
+  percentage?: number
   onDataChanged: (id: string, data: NodeData) => void,
 }
 
@@ -99,6 +100,7 @@ const DnDFlow = () => {
         addEdge(
           {
             ...connection,
+            type: 'number',
             animated: true,
             style: { stroke: '#21CE99' },
             markerEnd: {
@@ -154,6 +156,7 @@ const DnDFlow = () => {
           title: faker.person.jobArea(),
           photo: faker.image.urlLoremFlickr(),
           onDataChanged: handleDataChanged,
+          percentage: faker.number.int({ min: 0, max: 100 })
         } as NodeData,
         style: { border: '1px solid #777', padding: 10, width: '200px' }
       };
@@ -205,6 +208,7 @@ const DnDFlow = () => {
           nodes={nodes}
           edges={edges}
           nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}

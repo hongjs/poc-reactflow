@@ -3,13 +3,14 @@ import { NodeProps, Position } from 'reactflow';
 import NodeHandler from './NodeHandler';
 import NodeItem from './NodeItem';
 
-const NodeIC: ComponentType<NodeProps> = ({ id, data }) => {
+const MiddleNode: ComponentType<NodeProps> = ({ id, data }) => {
   return (
     <>
       <NodeHandler type="target" position={Position.Top} maxConnection={1} />
-      <NodeItem id={id} data={data} borderColor='#FF8767' disabledExpand />
+      <NodeItem id={id} data={data} borderColor='#0783a9' />
+      <NodeHandler type="source" position={Position.Bottom} />
     </>
   );
 };
 
-export default NodeIC;
+export default MiddleNode;

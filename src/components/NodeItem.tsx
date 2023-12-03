@@ -9,7 +9,8 @@ interface NodeItemProps {
     id: string;
     data: NodeData
     borderColor?: string,
-    disabledExpand?: boolean
+    disabledExpand?: boolean,
+    percentage?: number
 }
 
 const NodeItem = ({ id, data, borderColor, disabledExpand }: NodeItemProps) => {
