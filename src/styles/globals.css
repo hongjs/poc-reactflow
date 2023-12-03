@@ -72,8 +72,9 @@
 }
 
 .react-flow__edge.selected > .react-flow__edge-path {
-  stroke: #F58F29 !important;
-  transition: stroke 0.3s !important;
+  transition: 0.1s !important;
+  stroke-dasharray: 0 !important;
 }
 
+ 
  

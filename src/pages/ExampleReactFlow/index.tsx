@@ -1,20 +1,26 @@
 'use client';
-import { Panel, Sidebar } from '@/components';
-import { elkOptions, initialEdges, initialNodes, nodeTypes } from '@/configs/constants';
+import { ConnectionLine, Panel, Sidebar } from '@/components';
+import { elkOptions, initialEdges, initialNodes, nodeTypes, } from '@/configs/constants';
 import { faker } from '@faker-js/faker';
-import ELK, { ElkNode, LayoutOptions } from 'elkjs/lib/elk.bundled.js';
-import { useCallback, useRef, useState } from 'react';
+import ELK, { ElkExtendedEdge, ElkNode, LayoutOptions } from 'elkjs/lib/elk.bundled.js';
+import { DragEventHandler, useCallback, useRef, useState } from 'react';
 import ReactFlow, {
+  Connection,
   Controls,
+  Edge,
   MarkerType,
   MiniMap,
+  OnConnect,
   PanOnScrollMode,
+  ReactFlowInstance,
   addEdge,
+  getOutgoers,
   useEdgesState,
   useNodesState,
   useReactFlow
 } from 'reactflow';
 import 'reactflow/dist/style.css';
+
 
 const elk = new ELK();
 
@@ -26,19 +32,23 @@ export interface NodeData {
   onDataChanged: (id: string, data: NodeData) => void,
 }
 
+export interface EdgeData {
+
+}
+
 const DnDFlow = () => {
-  const { fitView } = useReactFlow();
+  const { fitView, getNodes, getEdges, } = useReactFlow();
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
+  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance<NodeData, EdgeData> | null>(null);
 
-  const getLayoutedElements = (nodes: any, edges: any, options: LayoutOptions = {}) => {
+  const getLayoutedElements = (nodes: Node[], edges: Edge[], options: LayoutOptions = {}) => {
     const isHorizontal = options?.['elk.direction'] === 'RIGHT';
     const graph: ElkNode = {
       id: 'root',
       layoutOptions: options,
-      children: nodes.map((node: any) => ({
+      children: nodes.map((node: Node) => ({
         ...node,
         // Adjust the target and source handle positions based on the layout
         // direction.
@@ -48,8 +58,8 @@ const DnDFlow = () => {
         // Hardcode a width and height for elk to use when layouting.
         width: 150,
         height: 100
-      })),
-      edges: edges
+      })) as unknown as ElkExtendedEdge[],
+      edges: edges as unknown as ElkExtendedEdge[]
     };
 
     return elk
@@ -68,30 +78,27 @@ const DnDFlow = () => {
 
   const onLayout = useCallback(
     (direction: string, useInitialNodes: boolean) => {
-      const opts: LayoutOptions = { 'elk.direction': direction, ...elkOptions };
+      const options: LayoutOptions = { 'elk.direction': direction, ...elkOptions };
+      const ns = (useInitialNodes ? initialNodes : nodes) as Node[];
+      const es = (useInitialNodes ? initialEdges : edges) as Edge[];
 
-      const ns = useInitialNodes ? initialNodes : nodes;
-      const es = useInitialNodes ? initialEdges : edges;
-
-      getLayoutedElements(ns, es, opts).then((res: any) => {
+      getLayoutedElements(ns, es, options).then((res: any) => {
         if (res) {
-          const { nodes: layoutedNodes, edges: layoutedEdges } = res;
-          setNodes(layoutedNodes);
-          setEdges(layoutedEdges);
+          setNodes(res.nodes);
+          setEdges(res.edges);
         }
-
         window.requestAnimationFrame(() => fitView());
       });
     },
     [nodes, edges]
   );
 
-  const onConnect = useCallback(
-    (params: any) =>
+  const onConnect: OnConnect = useCallback(
+    (connection) =>
       setEdges((eds) =>
         addEdge(
           {
-            ...params,
+            ...connection,
             animated: true,
             style: { stroke: '#21CE99' },
             markerEnd: {
@@ -107,20 +114,22 @@ const DnDFlow = () => {
     []
   );
 
-  const onDragOver = useCallback((event: any) => {
+  const onDragOver: DragEventHandler<HTMLDivElement> = useCallback((event) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
   }, []);
 
   const handleDataChanged = useCallback((id: string, data: NodeData) => {
-
-    setNodes((nds) => nds.map((nd) => nd.id === id ? { ...nd, data } : nd));
+    setNodes((nds) => {
+      return nds.map((nd) => nd.id === id ? { ...nd, data } : nd)
+    });
   }, []);
 
 
-  const onDrop = useCallback(
-    (event: any) => {
+  const onDrop: DragEventHandler<HTMLDivElement> = useCallback(
+    (event) => {
       event.preventDefault();
+      if (!reactFlowInstance) return;
 
       const type = event.dataTransfer.getData('application/reactflow');
 
@@ -161,6 +170,30 @@ const DnDFlow = () => {
     }
   }, [reactFlowInstance]);
 
+  const isValidConnection = useCallback(
+    (connection: Connection): boolean => {
+      // we are using getNodes and getEdges helpers here
+      // to make sure we create isValidConnection function only once
+      const nodes = getNodes();
+      const edges = getEdges();
+      const target = nodes.find((node) => node.id === connection.target);
+      const hasCycle = (node: any, visited = new Set()) => {
+        if (visited.has(node.id)) return false;
+
+        visited.add(node.id);
+
+        for (const outgoer of getOutgoers(node, nodes, edges)) {
+          if (outgoer.id === connection.source) return true;
+          if (hasCycle(outgoer, visited)) return true;
+        }
+      };
+
+      if (target?.id === connection.source) return false;
+      return !hasCycle(target);
+    },
+    [getNodes, getEdges],
+  );
+
   return (
     <div className="dndflow">
       <div
@@ -178,8 +211,10 @@ const DnDFlow = () => {
           onInit={setReactFlowInstance}
           onDrop={onDrop}
           onDragOver={onDragOver}
+          isValidConnection={isValidConnection}
           panOnScroll={true}
           panOnScrollMode={PanOnScrollMode.Free}
+          connectionLineComponent={ConnectionLine}
           fitView
         >
           <Controls />

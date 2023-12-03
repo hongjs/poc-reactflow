@@ -1,3 +1,4 @@
+export { default as ConnectionLine } from './ConnectionLine';
 export { default as NodeIC } from './NodeIC';
 export { default as NodeLeader } from './NodeLeader';
 export { default as NodeRoot } from './NodeRoot';
