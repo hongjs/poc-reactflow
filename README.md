@@ -1,7 +1,8 @@
 This is a Next.js & [React Flow](https://reactflow.dev)
 
 ## Reactflow Example
-![image](https://github.com/hongjs/poc-reactflow/assets/15359619/790bde11-a445-49b4-94f9-32aaab97e6b2)
+![image](https://github.com/hongjs/poc-reactflow/assets/15359619/f7697cfc-b7f0-44d4-bd3f-518d328be787)
+
 
 
 ## Getting Started
