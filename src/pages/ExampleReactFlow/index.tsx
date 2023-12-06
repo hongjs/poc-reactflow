@@ -5,6 +5,8 @@ import { faker } from '@faker-js/faker';
 import ELK, { ElkExtendedEdge, ElkNode, LayoutOptions } from 'elkjs/lib/elk.bundled.js';
 import { DragEventHandler, useCallback, useRef, useState } from 'react';
 import ReactFlow, {
+  Background,
+  BackgroundVariant,
   Connection,
   Controls,
   Edge,
@@ -17,7 +19,7 @@ import ReactFlow, {
   getOutgoers,
   useEdgesState,
   useNodesState,
-  useReactFlow
+  useReactFlow,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 
@@ -38,7 +40,7 @@ export interface EdgeData {
 }
 
 const DnDFlow = () => {
-  const { fitView, getNodes, getEdges, } = useReactFlow();
+  const { fitView, getNodes, getEdges, setViewport } = useReactFlow();
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -77,7 +79,7 @@ const DnDFlow = () => {
       .catch((error) => console.error('ERROR:', error));
   };
 
-  const onLayout = useCallback(
+  const handleLayoutClick = useCallback(
     (direction: string, useInitialNodes: boolean) => {
       const options: LayoutOptions = { 'elk.direction': direction, ...elkOptions };
       const ns = (useInitialNodes ? initialNodes : nodes) as Node[];
@@ -166,12 +168,22 @@ const DnDFlow = () => {
     [reactFlowInstance, setNodes]
   );
 
-  const onSave = useCallback(() => {
+  const handleSaveClick = useCallback(() => {
     if (reactFlowInstance) {
       const flow = reactFlowInstance.toObject();
-      console.log(JSON.stringify(flow));
+      localStorage.setItem('reactflow', JSON.stringify(flow));
     }
   }, [reactFlowInstance]);
+
+  const handleRestoreClick = useCallback(() => {
+    const flow = JSON.parse(localStorage.getItem('reactflow') ?? '{}');
+    if (flow?.viewport) {
+      const { x = 0, y = 0, zoom = 1 } = flow.viewport;
+      setNodes(flow.nodes || []);
+      setEdges(flow.edges || []);
+      setViewport({ x, y, zoom });
+    }
+  }, [setNodes, setEdges, setViewport]);
 
   const isValidConnection = useCallback(
     (connection: Connection): boolean => {
@@ -222,13 +234,16 @@ const DnDFlow = () => {
           fitView
         >
           <Controls />
+          <Background variant={BackgroundVariant.Lines} color='#ddd' gap={50} lineWidth={0.7} />
         </ReactFlow>
       </div>
+
       <MiniMap />
       <Sidebar />
-      <Panel onSave={onSave} onLayout={onLayout} />
+      <Panel onSave={handleSaveClick} onRestore={handleRestoreClick} onLayout={handleLayoutClick} />
     </div>
   );
 };
 
 export default DnDFlow;
+

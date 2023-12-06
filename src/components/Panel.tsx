@@ -4,10 +4,11 @@ import { memo, useCallback } from 'react';
 import { Panel } from 'reactflow';
 type ToolbarPanelProps = {
     onSave: () => void
+    onRestore: () => void
     onLayout: (direction: string, useInitialNodes: boolean) => void
 }
 
-const ToolbarPanel = ({ onSave, onLayout }: ToolbarPanelProps) => {
+const ToolbarPanel = ({ onSave, onRestore, onLayout }: ToolbarPanelProps) => {
 
     const handleLayoutClick = useCallback(() => {
         if (onLayout) {
@@ -19,6 +20,7 @@ const ToolbarPanel = ({ onSave, onLayout }: ToolbarPanelProps) => {
         <Panel position="top-left">
             <Stack direction="row" gap={1}>
                 <Button variant='contained' onClick={onSave}>Save</Button>
+                <Button variant='contained' onClick={onRestore}>Restore</Button>
                 <Button variant='contained' onClick={handleLayoutClick}>Auto Layout</Button>
             </Stack>
         </Panel >
