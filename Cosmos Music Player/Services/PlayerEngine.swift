@@ -2687,7 +2687,7 @@ class PlayerEngine: NSObject, ObservableObject {
     }
 
     /// Decodes repeat mode from a UserDefaults dictionary, with backward-compat for the old boolean fields.
-    private static func decodeRepeatMode(from dict: [String: Any]) -> RepeatMode {
+    static func decodeRepeatMode(from dict: [String: Any]) -> RepeatMode {
         if let raw = dict["repeatMode"] as? String, let mode = RepeatMode(rawValue: raw) {
             return mode
         }
